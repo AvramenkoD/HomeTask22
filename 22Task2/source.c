@@ -1,27 +1,23 @@
-/*Y(x) = e ^ (cos x) * cos(sin(x))
-	   x>0.75			x+1
-V(x) = 0 <= x <= 0.75	1 - pow(x,5)
-	   x < 0			x + ln(|cos(x)|)
-*/
-#include <stdio.h>
+Ôªø#include <stdio.h>
 #include <locale.h>
 #include <math.h>
-
-typedef double (*TFun)(double);
+#define WIDTH 100
+#define HEIGHT 50
+typedef double (*TFun—Å)(double);
 
 double funcY(double);
 double funcV(double);
-int printTab(TFun, double, double, double);
+int printTab(TFun—Å, double, double, double);
+int buildGraph(TFun—Å, double, double, double);
 
 int main() {
-
-	TFun masFunc[2] = {*funcV,*funcY};
-	int choise,opChoise;
+	TFun—Å masFunc[2] = { funcY, funcV };
+	int choise, opChoise;
 	double x1, x2, step;
 
 	setlocale(LC_ALL, "RUS");
 
-	puts("¬˚·ÂËÚÂ ÙÛÌÍˆË˛: ");
+	puts("–í—ã–±–µ—Ä–∏—Ç–µ —Ñ—É–Ω–∫—Ü–∏—é: ");
 	puts("0) Y(x) = e ^ (cos x) * cos(sin(x))");
 	puts("");
 	puts("  	 |x>0.75			x+1");
@@ -29,55 +25,104 @@ int main() {
 	puts("         |x < 0			x + ln(|cos(x)|)");
 	scanf("%d", &choise);
 
-
-	puts("¬˚·ÂËÚÂ ‰ÂÈÚÒ‚ËÂ: ");
-	puts("1) ¬˚˜ËÒÎËÚ¸ ÁÌ‡˜ÂÌËÂ");
-	puts("2) œÓÚ‡·ÛÎËÓ‚‡Ú¸ ÙÛÌÍˆË˛");
-	puts("3) œÓÒÚÓËÚ¸ „‡ÙËÍ ÙÛÌÍˆËË");
+	puts("–í—ã–±–µ—Ä–∏—Ç–µ –¥–µ–π—Å—Ç–≤–∏–µ: ");
+	puts("1) –í—ã—á–∏—Å–ª–∏—Ç—å –∑–Ω–∞—á–µ–Ω–∏–µ");
+	puts("2) –ü—Ä–æ—Ç–∞–±—É–ª–∏—Ä–æ–≤–∞—Ç—å —Ñ—É–Ω–∫—Ü–∏—é");
+	puts("3) –ü–æ—Å—Ç—Ä–æ–∏—Ç—å –≥—Ä–∞—Ñ–∏–∫ —Ñ—É–Ω–∫—Ü–∏–∏");
 	scanf("%d", &opChoise);
 
 	switch (opChoise) {
-		case 1:
-			printf("\n\n¬‚Â‰ËÚÂ x: ");
-			scanf("%lf", &x1);
-			printf("y = %lf",masFunc[choise](x1));
-			break;
-		case 2:
-			printf("¬‚Â‰ËÚÂ ‰Ë‡ÔÓÁÓÌ Ë ¯‡„ ˜ÂÂÁ ÔÓ·ÂÎ: ");
-			scanf("%lf %lf %lf", &x1, &x2, &step);
-			printTab(masFunc[choise], x1, x2, step);
-			break;
-		case 3:
-			
-
+	case 1:
+		printf("\n–í–≤–µ–¥–∏—Ç–µ x: ");
+		scanf("%lf", &x1);
+		printf("y = %lf\n", masFunc[choise](x1));
+		break;
+	case 2:
+		printf("–í–≤–µ–¥–∏—Ç–µ –¥–∏–∞–ø–∞–∑–æ–Ω –∏ —à–∞–≥ —á–µ—Ä–µ–∑ –ø—Ä–æ–±–µ–ª: ");
+		scanf("%lf %lf %lf", &x1, &x2, &step);
+		printTab(masFunc[choise], x1, x2, step);
+		break;
+	case 3:
+		printf("–í–≤–µ–¥–∏—Ç–µ –¥–∏–∞–ø–∞–∑–æ–Ω –∏ —à–∞–≥ —á–µ—Ä–µ–∑ –ø—Ä–æ–±–µ–ª: ");
+		scanf("%lf %lf %lf", &x1, &x2, &step);
+		buildGraph(masFunc[choise], x1, x2, step);
+		break;
 	}
 }
+
 double funcY(double x) {
-	double rez = exp(cos(x)) * cos(sin(x));
-	return rez;
+	return exp(cos(x)) * cos(sin(x));
 }
+
 double funcV(double x) {
-	double rez = 0;
 	if (x > 0.75)
-		rez = x + 1;
+		return x + 1;
 	else if (x >= 0)
-		rez = 1 - pow(x, 5);
+		return 1 - pow(x, 5);
 	else
-		rez = x + log(fabs(cos(x)));
-	return rez;
+		return x + log(fabs(cos(x)));
 }
 
-int printTab(TFun pfunc, double px1, double px2, double pstep) {
-
+int printTab(TFun—Å pfunc, double px1, double px2, double pstep) {
 	double temp;
-
 	printf("-----------------------------------\n");
 	printf("|    x    |       f(x)            |\n");
 	printf("-----------------------------------\n");
-
 	for (double i = px1; i <= px2; i += pstep) {
 		temp = pfunc(i);
-		printf("| %7lf | %21lf |\n", i, temp);
+		printf("| %7.3lf | %21.10lf |\n", i, temp);
 	}
+	return 0;
+}
+
+int buildGraph(TFun—Å f, double xStart, double xEnd, double step) {
+
+	char screen[HEIGHT][WIDTH];
+	double y[WIDTH];
+	double ymin, ymax, hx, hy;
+	int i, j, xz, yz;
+
+	hx = (xEnd - xStart) / (WIDTH - 1);
+	for (i = 0; i < WIDTH; ++i)
+		y[i] = f(xStart + i * hx);
+
+	ymin = ymax = y[0];
+	for (i = 1; i < WIDTH; ++i) {
+		if (y[i] < ymin) ymin = y[i];
+		if (y[i] > ymax) ymax = y[i];
+	}
+	if (ymax == ymin) ymax = ymin + 1e-6;
+	hy = (ymax - ymin) / (HEIGHT - 1);
+
+	yz = (int)((ymax / hy) + 0.5);
+	xz = (int)((0.0 - xStart) / hx + 0.5);
+
+	for (j = 0; j < HEIGHT; ++j)
+		for (i = 0; i < WIDTH; ++i)
+			screen[j][i] = ' ';
+
+	if (yz >= 0 && yz < HEIGHT)
+		for (i = 0; i < WIDTH; ++i)
+			screen[yz][i] = '-';
+
+	if (xz >= 0 && xz < WIDTH)
+		for (j = 0; j < HEIGHT; ++j)
+			screen[j][xz] = '|';
+
+	if (xz >= 0 && xz < WIDTH && yz >= 0 && yz < HEIGHT)
+		screen[yz][xz] = '+';
+
+	for (i = 0; i < WIDTH; ++i) {
+		j = (int)((ymax - y[i]) / hy + 0.5);
+		if (j >= 0 && j < HEIGHT)
+			screen[j][i] = '*';
+	}
+
+	for (j = 0; j < HEIGHT; ++j) {
+		for (i = 0; i < WIDTH; ++i)
+			putchar(screen[j][i]);
+		putchar('\n');
+	}
+
 	return 0;
 }
