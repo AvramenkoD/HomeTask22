@@ -3,15 +3,19 @@
 #include <math.h>
 #define WIDTH 100
 #define HEIGHT 50
+#define SIZE1 10
 typedef double (*TFunс)(double);
 
 double funcY(double);
 double funcV(double);
+double calculate(TFunс, double*, int);
 int printTab(TFunс, double, double, double);
 int buildGraph(TFunс, double, double, double);
 
 int main() {
+
 	TFunс masFunc[2] = { funcY, funcV };
+	double masX[SIZE1];
 	int choise, opChoise;
 	double x1, x2, step;
 
@@ -29,25 +33,33 @@ int main() {
 	puts("1) Вычислить значение");
 	puts("2) Протабулировать функцию");
 	puts("3) Построить график функции");
+	puts("4) Вычислить сумму максимального и минимального значений функции");
 	scanf("%d", &opChoise);
 
 	switch (opChoise) {
-	case 1:
-		printf("\nВведите x: ");
-		scanf("%lf", &x1);
-		printf("y = %lf\n", masFunc[choise](x1));
-		break;
-	case 2:
-		printf("Введите диапазон и шаг через пробел: ");
-		scanf("%lf %lf %lf", &x1, &x2, &step);
-		printTab(masFunc[choise], x1, x2, step);
-		break;
-	case 3:
-		printf("Введите диапазон и шаг через пробел: ");
-		scanf("%lf %lf %lf", &x1, &x2, &step);
-		buildGraph(masFunc[choise], x1, x2, step);
-		break;
+		case 1:
+			printf("\nВведите x: ");
+			scanf("%lf", &x1);
+			printf("y = %lf\n", masFunc[choise](x1));
+			break;
+		case 2:
+			printf("Введите диапазон и шаг через пробел: ");
+			scanf("%lf %lf %lf", &x1, &x2, &step);
+			printTab(masFunc[choise], x1, x2, step);
+			break;
+		case 3:
+			printf("Введите диапазон и шаг через пробел: ");
+			scanf("%lf %lf %lf", &x1, &x2, &step);
+			buildGraph(masFunc[choise], x1, x2, step);
+			break;
+		case 4:
+			printf("Введите %d значений x через Enter: ",SIZE1);
+			for (int i = 0; i < SIZE1; i++) {
+				scanf("%lf", &masX[i]);
+			}
+			printf("Сумма макс и мин значений = %lf", calculate(masFunc[choise], masX, SIZE1));
 	}
+
 }
 
 double funcY(double x) {
@@ -76,53 +88,69 @@ int printTab(TFunс pfunc, double px1, double px2, double pstep) {
 }
 
 int buildGraph(TFunс f, double xStart, double xEnd, double step) {
-
-	char screen[HEIGHT][WIDTH];
-	double y[WIDTH];
-	double ymin, ymax, hx, hy;
-	int i, j, xz, yz;
+	char screen[WIDTH][HEIGHT];
+	double x, y[WIDTH];
+	double ymin = 0, ymax = 0;
+	double hx, hy;
+	int i, j;
+	int xz, yz;
 
 	hx = (xEnd - xStart) / (WIDTH - 1);
-	for (i = 0; i < WIDTH; ++i)
-		y[i] = f(xStart + i * hx);
 
-	ymin = ymax = y[0];
-	for (i = 1; i < WIDTH; ++i) {
-		if (y[i] < ymin) ymin = y[i];
-		if (y[i] > ymax) ymax = y[i];
+	for (i = 0, x = xStart; i < WIDTH; ++i, x += hx) {
+
+		y[i] = f(x);
+		if (y[i] < ymin)
+			ymin = y[i];
+		if (y[i] > ymax)
+			ymax = y[i];
 	}
-	if (ymax == ymin) ymax = ymin + 1e-6;
+
 	hy = (ymax - ymin) / (HEIGHT - 1);
+	yz = (int)floor(ymax / hy + 0.5);
+	xz = (int)floor((0. - xStart) / hx + 0.5);
 
-	yz = (int)((ymax / hy) + 0.5);
-	xz = (int)((0.0 - xStart) / hx + 0.5);
 
-	for (j = 0; j < HEIGHT; ++j)
-		for (i = 0; i < WIDTH; ++i)
-			screen[j][i] = ' ';
+	for (j = 0; j < HEIGHT; ++j) {
+		for (i = 0; i < WIDTH; ++i) {
 
-	if (yz >= 0 && yz < HEIGHT)
-		for (i = 0; i < WIDTH; ++i)
-			screen[yz][i] = '-';
+			if (j == yz && i == xz)
+				screen[i][j] = '+';
+			else if (j == yz)
+				screen[i][j] = '-';
+			else if (i == xz)
+				screen[i][j] = '|';
+			else
+				screen[i][j] = ' ';
 
-	if (xz >= 0 && xz < WIDTH)
-		for (j = 0; j < HEIGHT; ++j)
-			screen[j][xz] = '|';
-
-	if (xz >= 0 && xz < WIDTH && yz >= 0 && yz < HEIGHT)
-		screen[yz][xz] = '+';
+		}
+	}
 
 	for (i = 0; i < WIDTH; ++i) {
-		j = (int)((ymax - y[i]) / hy + 0.5);
-		if (j >= 0 && j < HEIGHT)
-			screen[j][i] = '*';
+
+		j = (int)floor((ymax - y[i]) / hy + 0.5);
+		screen[i][j] = '*';
+
 	}
 
 	for (j = 0; j < HEIGHT; ++j) {
-		for (i = 0; i < WIDTH; ++i)
-			putchar(screen[j][i]);
-		putchar('\n');
-	}
 
+		for (i = 0; i < WIDTH; ++i)  putchar(screen[i][j]);
+		putchar('\n');
+
+	}
 	return 0;
+}
+double calculate(TFunс prtf, double* x, int n) {
+	double funz,rez,max = -1, min = pow(10, 10);
+
+	for (int i = 0; i < n; i++) {
+		funz = prtf(x[i]);
+		if (funz > max)
+			max = funz;
+		if (funz < min)
+			min = funz;
+	}
+	rez = max + min;
+	return rez;
 }
