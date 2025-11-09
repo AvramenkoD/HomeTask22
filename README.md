@@ -220,7 +220,7 @@ double calculate(TFunс prtf, double* x, int n) {
 <br>                                   *             |              *
 <br>                                  *              |               *
 <br>                                                 |
-<br>                                *               |                *
+<br>                                 *               |                *
 <br>                                *                |                 *
 <br>                                                 |
 <br>                               *                 |                  *
