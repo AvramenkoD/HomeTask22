@@ -24,7 +24,7 @@
 7. **Конец**
 
 ### Блок-схема
-![Блок-схема алгоритма](22Lab_schema.png)
+![Блок-схема алгоритма](22lab_schema.png)
 
  [Ссылка на блок-схему](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=22.drawio&dark=auto#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1ORA9d7roS0H4ZdapxX1agJfG00tjeJpP%26export%3Ddownload)
 
